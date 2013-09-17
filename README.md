@@ -14,11 +14,13 @@ In the larger scheme of things these numbers could be argued to be irrelevant, e
 #### Startup time
 
 NServiceBus Host 5200 ms
+
 Self Host 2783 ms
 
 #### Memory Usage
 
 NServiceBus Host 37.9 MB
+
 Self Host 21.3 MB   
 
 ### Deployment Size
