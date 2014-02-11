@@ -3,11 +3,11 @@ using System.ServiceProcess;
 using NServiceBus;
 using NServiceBus.Installation.Environments;
 
-class SelfHostService : ServiceBase
+internal class SelfHostService : ServiceBase
 {
-    IStartableBus bus;
+    private IStartableBus bus;
 
-    static void Main()
+    private static void Main()
     {
         using (var service = new SelfHostService())
         {
@@ -33,9 +33,12 @@ class SelfHostService : ServiceBase
         Configure.Serialization.Json();
 
         bus = Configure.With()
-                        .DefaultBuilder()
-                        .UnicastBus()
-                        .CreateBus();
+            .DefaultBuilder()
+            .InMemorySagaPersister()
+            .UseInMemoryTimeoutPersister()
+            .InMemorySubscriptionStorage()
+            .UnicastBus()
+            .CreateBus();
         bus.Start(() => Configure.Instance.ForInstallationOn<Windows>().Install());
     }
 

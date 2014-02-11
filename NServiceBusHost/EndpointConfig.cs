@@ -12,6 +12,9 @@ public class EndpointConfig : IConfigureThisEndpoint, AsA_Server, IWantCustomIni
         Configure.Serialization.Json();
 
         Configure.With()
-                 .DefaultBuilder();
+                 .DefaultBuilder()
+                 .InMemorySagaPersister()
+            .UseInMemoryTimeoutPersister()
+            .InMemorySubscriptionStorage();
     }
 }
