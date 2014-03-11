@@ -3,7 +3,7 @@
 Self hosting NServiceBus
 ====================
 
-So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, uninstallation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it
+So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, un-installation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it
 
 ## Nuget
 
@@ -13,13 +13,30 @@ There is a starter packages on nuget.
 
     PM> Install-Package NServiceBus.SelfHostStarter
 
+### Single use nuget
+
+This is a "single use nuget". So it after install, and adding code to your project, it will remove itself. Since it is single use there will never be any "upgrade", this is a "use and discard" approach.
+
+### For new self hosting applications
+
+This nuget helps you get started on a new self hosted NServiceBus application. If you have an existing NServiceBus project you have probably already solved the problems this nuget attempts to address.
+
+### In Memory
+
+This nuget configures everything to be in memory. The reason is that it makes no assumptions about your choice of persistence and it also aims to be run-able with no other dependencies.
+
+### Serilog
+
+The nuget is slightly opinionated in terms of logging library. [Serilog](http://serilog.net/) is currently he best logging library for .net. As such this nuget takes a dependency on it and wires it into the NServiceBus infrastructure.
+
+
 ## Drawbacks of the NServiceBus Host
 
 *The numbers and comparisons are taken from projects included in this repository*
 
 ### Performance
 
-In the larger scheme of things these numbers could be argued to be irrelevant, especially in the context of a real solution. However I am including them to show that a self hosted solution is in fact a little more performant. This is no surprise since a self host is a specific solution to a problem and hence can be more specialised.
+In the larger scheme of things these numbers could be argued to be irrelevant, especially in the context of a real solution. However I am including them to show that a self hosted solution is in fact a little more performant. This is no surprise since a self host is a specific solution to a problem and hence can be more specialized.
 
 #### Startup time
 
@@ -43,7 +60,7 @@ The NServiceBus Host is a non-trivial piece of software, especially when you inc
 
 ### Controlling the entry point
 
-When using the NServiceBus Host the host is calling our code. As such the configuration code and behaviours (such as startup and shutdown) need to plug into very specific APIs. For example `IWantCustomLogging`, `IWantCustomInitialization`, `IWantToRunWhenBusStartsAndStops` and `IConfigureLogging`. If you invert the scenario, i.e. the developers code calls NServiceBus configuration, then these APIs are not required. 
+When using the NServiceBus Host the host is calling our code. As such the configuration code and behaviors (such as startup and shutdown) need to plug into very specific APIs. For example `IWantCustomLogging`, `IWantCustomInitialization`, `IWantToRunWhenBusStartsAndStops` and `IConfigureLogging`. If you invert the scenario, i.e. the developers code calls NServiceBus configuration, then these APIs are not required. 
 
 # How the code differs
 
