@@ -35,11 +35,11 @@
   <ItemGroup>
     <Reference Include="NServiceBus, Version=4.4.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NServiceBus.Interfaces.4.4.1\lib\net40\NServiceBus.dll</HintPath>
+      <HintPath>..\packages\NServiceBus.Interfaces.4.4.2\lib\net40\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core, Version=4.4.0.0, Culture=neutral, PublicKeyToken=9fc386479f8a226c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\NServiceBus.4.4.1\lib\net40\NServiceBus.Core.dll</HintPath>
+      <HintPath>..\packages\NServiceBus.4.4.2\lib\net40\NServiceBus.Core.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Serilog, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -69,13 +69,36 @@
     <Compile Include="MessageStarter.cs" />
     <Compile Include="MyHandler.cs" />
     <Compile Include="MyMessage.cs" />
-    <Compile Include="SelfHostService.cs">
+    <Compile Include="ProgramService.cs">
       <SubType>Component</SubType>
     </Compile>
     <None Include="app.config" />
+    <None Include="Nuget\install.ps1" />
+    <None Include="Nuget\NServiceBus.SelfHostStarter.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <UsingTask TaskName="PepitaPackage.CreatePackageTask" AssemblyFile="$(SolutionDir)Tools\PepitaPackage.dll" />
+  <UsingTask TaskName="FileUpdate" AssemblyFile="$(SolutionDir)Tools\MSBuild.Community.Tasks.dll" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <FilesToDelete Include="$(SolutionDir)NuGetBuild\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+    <MakeDir Directories="$(SolutionDir)NuGetBuild" />
+    <Copy SourceFiles="$(ProjectDir)Nuget\NServiceBus.SelfHostStarter.nuspec" DestinationFolder="$(SolutionDir)NuGetBuild" />
+    <Copy SourceFiles="$(ProjectDir)Nuget\install.ps1" DestinationFolder="$(SolutionDir)NuGetBuild\Tools" />
+    <Copy SourceFiles="$(ProjectDir)ProgramService.cs" DestinationFiles="$(SolutionDir)NuGetBuild\Content\ProgramService.cs.pp" />
+    <Copy SourceFiles="$(ProjectDir)ConfigErrorQueue.cs" DestinationFolder="$(SolutionDir)NuGetBuild\Content" />
+    <Copy SourceFiles="$(ProjectDir)LoggingConfig.cs" DestinationFolder="$(SolutionDir)NuGetBuild\Content" />
+    <ItemGroup>
+      <CsFiles Include="$(SolutionDir)NuGetBuild\Content\*.cs.pp" />
+    </ItemGroup>
+    <FileUpdate Files="@(CsFiles)" Regex="&quot;SelfHostSample&quot;" ReplacementText="&quot;$rootnamespace$&quot;" />
+    <PepitaPackage.CreatePackageTask NuGetBuildDirectory="$(SolutionDir)NuGetBuild" />
+  </Target>
 </Project>

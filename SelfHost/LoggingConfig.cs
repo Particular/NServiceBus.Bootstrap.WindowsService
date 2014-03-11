@@ -8,6 +8,7 @@ class LoggingConfig
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.ColoredConsole(LogEventLevel.Information)
+            .WriteTo.RollingFile("log-{Date}.txt", LogEventLevel.Information)
             .CreateLogger();
 
         SerilogConfigurator.Configure();

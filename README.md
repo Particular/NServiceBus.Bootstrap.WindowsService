@@ -1,3 +1,5 @@
+![Icon](https://raw.github.com/SimonCropp/NServiceBus.SelfHost/master/Icons/package_icon.png)
+
 Self hosting NServiceBus
 ====================
 
@@ -267,6 +269,6 @@ Often the machine name is prefixed or suffixed with the environment type. eg mac
 
 If you want the environment to have more granular control then you can use an evionmental variable. For example `Environment.GetEnvironmentVariable("EnvironmentName")` or `Environment.GetEnvironmentVariable("SalesEndpointConfigName")`.  
 
+## Icon 
 
-   
-
+<a href="http://thenounproject.com/term/lotus-flower/33319/" target="_blank">Lotus Flower</a> from The Noun Project

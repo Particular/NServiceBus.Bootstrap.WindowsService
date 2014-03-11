@@ -3,13 +3,13 @@ using System.ServiceProcess;
 using NServiceBus;
 using NServiceBus.Installation.Environments;
 
-internal class SelfHostService : ServiceBase
+class ProgramService : ServiceBase
 {
-    private IStartableBus bus;
+    IStartableBus bus;
 
-    private static void Main()
+    static void Main()
     {
-        using (var service = new SelfHostService())
+        using (var service = new ProgramService())
         {
             // so we can run interactive from Visual Studio or as a service
             if (Environment.UserInteractive)
@@ -28,6 +28,7 @@ internal class SelfHostService : ServiceBase
 
     protected override void OnStart(string[] args)
     {
+        Configure.GetEndpointNameAction = () => "SelfHostSample";
         LoggingConfig.ConfigureLogging();
 
         Configure.Serialization.Json();
