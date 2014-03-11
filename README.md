@@ -5,6 +5,14 @@ Self hosting NServiceBus
 
 So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, uninstallation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it
 
+## Nuget
+
+There is a starter packages on nuget.
+
+[http://www.nuget.org/packages/NServiceBus.SelfHostStarter/](http://www.nuget.org/packages/NServiceBus.SelfHostStarter/)
+
+    PM> Install-Package NServiceBus.SelfHostStarter
+
 ## Drawbacks of the NServiceBus Host
 
 *The numbers and comparisons are taken from projects included in this repository*
