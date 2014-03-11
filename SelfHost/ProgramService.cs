@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.ServiceProcess;
 using NServiceBus;
 using NServiceBus.Installation.Environments;
@@ -40,7 +41,16 @@ class ProgramService : ServiceBase
             .InMemorySubscriptionStorage()
             .UnicastBus()
             .CreateBus();
-        bus.Start(() => Configure.Instance.ForInstallationOn<Windows>().Install());
+        bus.Start(Startup);
+    }
+
+    static void Startup()
+    {
+        //Only create queues when a user is debugging
+        if (Environment.UserInteractive && Debugger.IsAttached)
+        {
+            Configure.Instance.ForInstallationOn<Windows>().Install();
+        }
     }
 
     protected override void OnStop()
