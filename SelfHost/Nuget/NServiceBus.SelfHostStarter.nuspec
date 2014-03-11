@@ -10,9 +10,9 @@
     <projectUrl>https://github.com/SimonCropp/NServiceBus.SelfHost/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <iconUrl>https://raw.github.com/SimonCropp/NServiceBus.SelfHost/master/Icons/package_icon.png</iconUrl>
-    <description>A starter package for .</description>
+    <description>A starter package for NServiceBus SelfHosting. Add to a new ConsoleApplication.</description>
     <language>en-AU</language>
-    <tags>NServiceBus</tags>
+    <tags>NServiceBus, SelfHost</tags>
     <dependencies>
       <dependency id="NServiceBus"/>
       <dependency id="NServiceBus.Interfaces"/>
