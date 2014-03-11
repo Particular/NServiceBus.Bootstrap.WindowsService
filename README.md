@@ -13,6 +13,10 @@ There is a starter packages on nuget.
 
     PM> Install-Package NServiceBus.SelfHostStarter
 
+### How to use
+
+Create a new Console Application and install the nuget package.
+
 ### Single use nuget
 
 This is a "single use nuget". So it after install, and adding code to your project, it will remove itself. Since it is single use there will never be any "upgrade", this is a "use and discard" approach.
