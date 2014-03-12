@@ -33,6 +33,7 @@ This nuget configures everything to be in memory. The reason is that it makes no
 
 The nuget is slightly opinionated in terms of logging library. [Serilog](http://serilog.net/) is currently he best logging library for .net. As such this nuget takes a dependency on it and wires it into the NServiceBus infrastructure.
 
+# Justification
 
 ## Drawbacks of the NServiceBus Host
 
