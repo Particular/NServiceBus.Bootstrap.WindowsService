@@ -71,73 +71,77 @@ When using the NServiceBus Host the host is calling our code. As such the config
 
 ## NServiceBus Host
 
-When using the NServiceBus Host your configuration might look like this 
-
-    public class EndpointConfig : IConfigureThisEndpoint, AsA_Server, IWantCustomInitialization
+When using the NServiceBus Host your configuration might look like this
+ 
+```
+public class EndpointConfig : IConfigureThisEndpoint, AsA_Server, IWantCustomInitialization
+{
+    public void Init()
     {
-        public void Init()
-        {
-            LoggingConfig.ConfigureLogging();
-
-            SerilogConfigurator.Configure();
-
-            Configure.Serialization.Json();
-
-            Configure.With()
-                     .DefaultBuilder();
-        }
+        Configure.Serialization.Json();
+        Configure.With()
+                 .DefaultBuilder();
     }
-
+}
+```
 ## Self Host
 
 You can achieve the same with a Self Host by using the below.
 
-As you can see it is more code (44 lines versus 15 lines). However the extra code is very simple and easy to manage. 
+As you can see it is more code. However the extra code is very simple and easy to manage. 
 
-    class SelfHostService : ServiceBase
+```
+class ProgramService : ServiceBase
+{
+    IStartableBus bus;
+
+    static void Main()
     {
-        IStartableBus bus;
-
-        static void Main()
+        using (var service = new ProgramService())
         {
-            using (var service = new SelfHostService())
+            // so we can run interactive from Visual Studio or as a service
+            if (Environment.UserInteractive)
             {
-                // so we can run interactive from Visual Studio or as a service
-                if (Environment.UserInteractive)
-                {
-                    service.OnStart(null);
-                    Console.WriteLine("\r\nPress any key to stop program\r\n");
-                    Console.Read();
-                    service.OnStop();
-                }
-                else
-                {
-                    Run(service);
-                }
+                service.OnStart(null);
+                Console.WriteLine("\r\nPress any key to stop program\r\n");
+                Console.Read();
+                service.OnStop();
             }
-        }
-
-        protected override void OnStart(string[] args)
-        {
-            LoggingConfig.ConfigureLogging();
-
-            Configure.Serialization.Json();
-
-            bus = Configure.With()
-                           .DefaultBuilder()
-                           .UnicastBus()
-                           .CreateBus();
-            bus.Start(() => Configure.Instance.ForInstallationOn<Windows>().Install());
-        }
-
-        protected override void OnStop()
-        {
-            if (bus != null)
+            else
             {
-                bus.Shutdown();
+                Run(service);
             }
         }
     }
+
+    protected override void OnStart(string[] args)
+    {
+        Configure.GetEndpointNameAction = () => "SelfHostSample";
+        bus = Configure.With()
+            .DefaultBuilder()
+            .UnicastBus()
+            .CreateBus();
+        bus.Start(Startup);
+    }
+
+    static void Startup()
+    {
+        //Only create queues when a user is debugging
+        if (Environment.UserInteractive && Debugger.IsAttached)
+        {
+            Configure.Instance.ForInstallationOn<Windows>().Install();
+        }
+    }
+
+    protected override void OnStop()
+    {
+        if (bus != null)
+        {
+            bus.Shutdown();
+        }
+    }
+}
+```
 
 # Install / Uninstall
 
@@ -147,7 +151,7 @@ So the NServiceBus Host handles installation and uninstallation. For example:
     NServiceBus.Host.exe /install /serviceName:"SalesEndpoint" 
     NServiceBus.Host.exe /uninstall /serviceName:"SalesEndpoint" 
 
-When using a Self Host there is no such finctioality. However Windows supports these features though the use of the [Service Control tool](http://technet.microsoft.com/en-us/library/cc754599.aspx). So the same commands using `sc.exe` would be: 
+When using a Self Host there is no such functionality. However Windows supports these features though the use of the [Service Control tool](http://technet.microsoft.com/en-us/library/cc754599.aspx). So the same commands using `sc.exe` would be: 
 
     sc create SalesEndpoint binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
     sc delete SalesEndpoint 
@@ -265,7 +269,7 @@ When self hosting NServiceBus you have to invoke the installers manually using
 
 ### Profiles and Roles
 
-NServiceBus has the concept of `Roles` and `Profiles`. For a good outline on these see [David Boike's](http://www.make-awesome.com/) post [All About NServiceBus Host Profiles and Roles](http://www.make-awesome.com/2013/02/all-about-nservicebus-host-profiles-and-roles/). I have found that the level of abstraction that comes from `Roles` and `Profiles` is too high. Initially they simplify the solution but when you start to get into more complex cases they are hard to combine, reuse and debug. IMHO it is more better to understand what you want to configure and perform those actions explicitly. For example if you want the behaviour or `AsA_Client` then include this in you configuration code.
+NServiceBus has the concept of `Roles` and `Profiles`. For a good outline on these see [David Boike's](http://www.make-awesome.com/) post [All About NServiceBus Host Profiles and Roles](http://www.make-awesome.com/2013/02/all-about-nservicebus-host-profiles-and-roles/). I have found that the level of abstraction that comes from `Roles` and `Profiles` is too high. Initially they simplify the solution but when you start to get into more complex cases they are hard to combine, reuse and debug. IMHO it is more better to understand what you want to configure and perform those actions explicitly. For example if you want the behavior or `AsA_Client` then include this in you configuration code.
 
     Configure.Transactions.Disable();
     Configure.Features.Disable<Features.SecondLevelRetries>();
@@ -297,7 +301,7 @@ Often the machine name is prefixed or suffixed with the environment type. eg mac
 
 #### By environmental variable 
 
-If you want the environment to have more granular control then you can use an evionmental variable. For example `Environment.GetEnvironmentVariable("EnvironmentName")` or `Environment.GetEnvironmentVariable("SalesEndpointConfigName")`.  
+If you want the environment to have more granular control then you can use an environmental variable. For example `Environment.GetEnvironmentVariable("EnvironmentName")` or `Environment.GetEnvironmentVariable("SalesEndpointConfigName")`.  
 
 ## Icon 
 
