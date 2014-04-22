@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8">
     <id>NServiceBus.SelfHostStarter</id>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <title>NServiceBus.SelfHostStarter</title>
     <authors>Simon Cropp</authors>
     <owners>Simon Cropp</owners>
@@ -14,10 +14,10 @@
     <language>en-AU</language>
     <tags>NServiceBus, SelfHost</tags>
     <dependencies>
-      <dependency id="NServiceBus"/>
-      <dependency id="NServiceBus.Interfaces"/>
-      <dependency id="NServiceBus.Serilog" />		
-      <dependency id="Serilog" />		
+      <dependency id="NServiceBus" version="4.4.2"/>
+      <dependency id="NServiceBus.Interfaces" version="4.4.2"/>
+      <dependency id="NServiceBus.Serilog" version="1.5" />		
+      <dependency id="Serilog" version="1.2"/>		
 	  </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Configuration" />
