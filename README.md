@@ -31,7 +31,11 @@ This nuget configures everything to be in memory. The reason is that it makes no
 
 ### Serilog
 
-The nuget is slightly opinionated in terms of logging library. [Serilog](http://serilog.net/) is currently he best logging library for .net. As such this nuget takes a dependency on it and wires it into the NServiceBus infrastructure.
+The nuget is opinionated in terms of logging library. It nuget takes a dependency on [Serilog](http://serilog.net/) and wires it into the NServiceBus infrastructure.
+
+### Autofac
+
+The nuget is opinionated in terms of container. It nuget takes a dependency on [Autofac](http://autofac.org/) and wires it into the NServiceBus infrastructure.
 
 # Justification
 

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using Autofac;
 using NServiceBus;
 using NServiceBus.Installation.Environments;
 
 class ProgramService : ServiceBase
 {
     IStartableBus bus;
+    IContainer container;
 
     static void Main()
     {
@@ -16,14 +18,12 @@ class ProgramService : ServiceBase
             if (Environment.UserInteractive)
             {
                 service.OnStart(null);
-                Console.WriteLine("\r\nPress any key to stop program\r\n");
+                Console.WriteLine("\r\nPress enter key to stop program\r\n");
                 Console.Read();
                 service.OnStop();
+                return;
             }
-            else
-            {
-                Run(service);
-            }
+            Run(service);
         }
     }
 
@@ -34,8 +34,10 @@ class ProgramService : ServiceBase
 
         Configure.Serialization.Json();
 
+        container = ContainerFactory.BuildContainer();
+
         bus = Configure.With()
-            .DefaultBuilder()
+            .AutofacBuilder(container)
             .InMemorySagaPersister()
             .UseInMemoryTimeoutPersister()
             .InMemorySubscriptionStorage()
@@ -59,5 +61,10 @@ class ProgramService : ServiceBase
         {
             bus.Shutdown();
         }
+        if (container != null)
+        {
+            container.Dispose();
+        }
     }
+
 }
