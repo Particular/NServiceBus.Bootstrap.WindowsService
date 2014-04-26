@@ -61,11 +61,11 @@ Self Host 21.3 MB
 
 ### Deployment Size
 
-The Self Host does not need `NServiceBus.Host` (exe or pdb) however it does require a few more lines of setup code (see "How the code differs" below). The end result is that the self host approach is approximately 2.7MB smaller when self hosting
+The Self Host does not need `NServiceBus.Host` (exe or pdb) however it does require a few more lines of setup code (see "How the code differs" below). The end result is that the self host approach is approximately 2.7MB smaller.
 
 ### Debugging
 
-The NServiceBus Host is a non-trivial piece of software, especially when you include its dependency on TopShelf. As such this dependency can add complexity to debugging issues. On example is that there can be issues with exceptions that are passed through TopShelf. 
+The NServiceBus Host is a non-trivial piece of software, especially when you include its dependency on TopShelf. As such this dependency can add complexity to debugging issues. One example is that there can be issues with exceptions that are passed through TopShelf. 
 
 ### Controlling the entry point
 
