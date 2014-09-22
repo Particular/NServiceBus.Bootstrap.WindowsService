@@ -97,7 +97,7 @@ As you can see it is more code. However the extra code is very simple and easy t
 ```
 class ProgramService : ServiceBase
 {
-    IStartableBus bus;
+    IBus bus;
 
     static void Main()
     {
@@ -107,41 +107,35 @@ class ProgramService : ServiceBase
             if (Environment.UserInteractive)
             {
                 service.OnStart(null);
-                Console.WriteLine("\r\nPress any key to stop program\r\n");
+                Console.WriteLine("\r\nPress enter key to stop program\r\n");
                 Console.Read();
                 service.OnStop();
+                return;
             }
-            else
-            {
-                Run(service);
-            }
+            Run(service);
         }
     }
 
     protected override void OnStart(string[] args)
     {
-        Configure.GetEndpointNameAction = () => "SelfHostSample";
-        bus = Configure.With()
-            .DefaultBuilder()
-            .UnicastBus()
-            .CreateBus();
-        bus.Start(Startup);
-    }
+        var busConfiguration = new BusConfiguration();
+        busConfiguration.EndpointName("SelfHostSample");
+        busConfiguration.UseSerialization<JsonSerializer>();
+        busConfiguration.UsePersistence<InMemoryPersistence>();
 
-    static void Startup()
-    {
-        //Only create queues when a user is debugging
         if (Environment.UserInteractive && Debugger.IsAttached)
         {
-            Configure.Instance.ForInstallationOn<Windows>().Install();
+            busConfiguration.EnableInstallers();
         }
+        var startableBus = Bus.Create(busConfiguration);
+        bus = startableBus.Start();
     }
 
     protected override void OnStop()
     {
         if (bus != null)
         {
-            bus.Shutdown();
+            bus.Dispose();
         }
     }
 }
