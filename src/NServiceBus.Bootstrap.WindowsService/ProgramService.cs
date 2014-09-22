@@ -11,7 +11,7 @@ class ProgramService : ServiceBase
     {
         using (var service = new ProgramService())
         {
-            // so we can run interactive from Visual Studio or as a service
+            // so we can run interactive from Visual Studio or as a windows service
             if (Environment.UserInteractive)
             {
                 service.OnStart(null);
