@@ -3,7 +3,7 @@
 Self hosting NServiceBus
 ====================
 
-So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, un-installation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it
+So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, un-installation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it.
 
 ## Nuget
 
@@ -273,7 +273,7 @@ When self hosting NServiceBus you have to invoke the installers manually using
 
 ### Profiles and Roles
 
-NServiceBus has the concept of `Roles` and `Profiles`. For a good outline on these see [David Boike's](http://www.make-awesome.com/) post [All About NServiceBus Host Profiles and Roles](http://www.make-awesome.com/2013/02/all-about-nservicebus-host-profiles-and-roles/). I have found that the level of abstraction that comes from `Roles` and `Profiles` is too high. Initially they simplify the solution but when you start to get into more complex cases they are hard to combine, reuse and debug. IMHO it is more better to understand what you want to configure and perform those actions explicitly. For example if you want the behavior or `AsA_Client` then include this in you configuration code.
+NServiceBus has the concept of `Roles` and `Profiles`. For a good outline on these see [David Boike's](http://www.make-awesome.com/) post [All About NServiceBus Host Profiles and Roles](http://www.make-awesome.com/2013/02/all-about-nservicebus-host-profiles-and-roles/). I have found that the level of abstraction that comes from `Roles` and `Profiles` is too high. Initially they simplify the solution but when you start to get into more complex cases they are hard to combine, reuse and debug. IMHO it is better to understand what you want to configure and perform those actions explicitly. For example if you want the behavior or `AsA_Client` then include this in you configuration code.
 
     Configure.Transactions.Disable();
     Configure.Features.Disable<Features.SecondLevelRetries>();
