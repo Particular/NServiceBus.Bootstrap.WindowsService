@@ -22,7 +22,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\..\NuGetBuild\*.*" target="Content" />
+    <file src="..\..\results\*.*" target="Content" />
     <file src="install.ps1" target="tools" />
   </files>
 </package>

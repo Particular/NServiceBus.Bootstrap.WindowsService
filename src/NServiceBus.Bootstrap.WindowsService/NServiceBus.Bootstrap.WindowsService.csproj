@@ -62,14 +62,14 @@
   <UsingTask TaskName="FileUpdate" AssemblyFile="$(SolutionDir)Tools\MSBuild.Community.Tasks.dll" />
   <Target Name="AfterBuild">
     <ItemGroup>
-      <FilesToDelete Include="$(SolutionDir)..\NuGetBuild\**\*.*" />
+      <FilesToDelete Include="$(SolutionDir)..\results\**\*.*" />
     </ItemGroup>
     <Delete Files="@(FilesToDelete)" />
-    <MakeDir Directories="$(SolutionDir)..\NuGetBuild" />
-    <Copy SourceFiles="$(ProjectDir)ProgramService.cs" DestinationFiles="$(SolutionDir)..\NuGetBuild\ProgramService.cs.pp" />
-    <Copy SourceFiles="$(ProjectDir)ConfigErrorQueue.cs" DestinationFolder="$(SolutionDir)..\NuGetBuild" />
+    <MakeDir Directories="$(SolutionDir)..\results" />
+    <Copy SourceFiles="$(ProjectDir)ProgramService.cs" DestinationFiles="$(SolutionDir)..\results\ProgramService.cs.pp" />
+    <Copy SourceFiles="$(ProjectDir)ConfigErrorQueue.cs" DestinationFolder="$(SolutionDir)..\results" />
     <ItemGroup>
-      <CsFiles Include="$(SolutionDir)..\NuGetBuild\*.cs.pp" />
+      <CsFiles Include="$(SolutionDir)..\results\*.cs.pp" />
     </ItemGroup>
     <FileUpdate Files="@(CsFiles)" Regex="&quot;SelfHostSample&quot;" ReplacementText="&quot;$rootnamespace$&quot;" />
   </Target>
