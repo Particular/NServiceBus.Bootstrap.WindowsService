@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Autofac;
 using NServiceBus;
-using NServiceBus.Installation.Environments;
 
 class ProgramService : ServiceBase
 {
-    IStartableBus bus;
-    IContainer container;
+    IBus bus;
 
     static void Main()
     {
@@ -29,41 +26,24 @@ class ProgramService : ServiceBase
 
     protected override void OnStart(string[] args)
     {
-        Configure.GetEndpointNameAction = () => "SelfHostSample";
-        LoggingConfig.ConfigureLogging();
+        var busConfiguration = new BusConfiguration();
+        busConfiguration.EndpointName("SelfHostSample");
+        busConfiguration.UseSerialization<JsonSerializer>();
+        busConfiguration.UsePersistence<InMemoryPersistence>();
 
-        Configure.Serialization.Json();
-
-        container = ContainerFactory.BuildContainer();
-
-        bus = Configure.With()
-            .AutofacBuilder(container)
-            .InMemorySagaPersister()
-            .UseInMemoryTimeoutPersister()
-            .InMemorySubscriptionStorage()
-            .UnicastBus()
-            .CreateBus();
-        bus.Start(Startup);
-    }
-
-    static void Startup()
-    {
-        //Only create queues when a user is debugging
         if (Environment.UserInteractive && Debugger.IsAttached)
         {
-            Configure.Instance.ForInstallationOn<Windows>().Install();
+            busConfiguration.EnableInstallers();
         }
+        var startableBus = Bus.Create(busConfiguration);
+        bus = startableBus.Start();
     }
 
     protected override void OnStop()
     {
         if (bus != null)
         {
-            bus.Shutdown();
-        }
-        if (container != null)
-        {
-            container.Dispose();
+            bus.Dispose();
         }
     }
 
