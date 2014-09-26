@@ -12,7 +12,9 @@ http://www.nuget.org/packages/NServiceBus.Bootstrap.WindowsService
 
 ### How to use
 
-Create a new Console Application and install the nuget package. A minimal NServiceBus configuration will be setup for you along with a `ProgramService` class that can be used as both a interactive console for development purposes and a windows service for production use. 
+Create a new Console Application and install the nuget package. A minimal NServiceBus configuration will be setup for you along with a `ProgramService.cs` class that can be used as both a interactive console for development purposes and a windows service for production use. 
+
+**Note that it will also delete the default `Program.cs` since it is superseded by `ProgramService.cs`**
 
 ### Single use nuget
 
