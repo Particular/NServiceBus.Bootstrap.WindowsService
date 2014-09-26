@@ -10,7 +10,7 @@
     <projectUrl>http://particular.net/</projectUrl>
     <iconUrl>http://s3.amazonaws.com/nuget.images/NServiceBus_32.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>A starter package for NServiceBus SelfHosting. Add to a new ConsoleApplication.</description>
+    <description>For self hosting NServiceBus in a windows service. Add to a new ConsoleApplication.</description>
     <copyright>Copyright 2010-2014 NServiceBus. All rights reserved</copyright>
     <tags>NServiceBus, SelfHost</tags>
     <dependencies>

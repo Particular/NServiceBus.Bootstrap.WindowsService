@@ -20,10 +20,10 @@ function RemoveFromPackageNode
 
 function DeleteProgram
 {
-	Write-Host "Deleting Program.cs"
 	$program = $project.ProjectItems | where { $_.Name -eq "Program.cs" }
 
 	if ($program){
+		Write-Host "Deleting Program.cs"
 		$program.Delete()
 	}
 }
