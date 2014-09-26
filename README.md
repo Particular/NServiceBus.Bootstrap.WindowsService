@@ -9,9 +9,9 @@ So NServiceBus comes with a very functional host exe that abstracts much of the 
 
 There is a starter packages on nuget.
 
-[http://www.nuget.org/packages/NServiceBus.SelfHostStarter/](http://www.nuget.org/packages/NServiceBus.SelfHostStarter/)
+http://www.nuget.org/packages/NServiceBus.Bootstrap.WindowsService
 
-    PM> Install-Package NServiceBus.SelfHostStarter
+    PM> Install-Package NServiceBus.Bootstrap.WindowsService
 
 ### How to use
 
@@ -25,43 +25,23 @@ This is a "single use nuget". So it after install, and adding code to your proje
 
 This nuget helps you get started on a new self hosted NServiceBus application. If you have an existing NServiceBus project you have probably already solved the problems this nuget attempts to address.
 
-### In Memory
+### In Memory Persistence
 
 This nuget configures everything to be in memory. The reason is that it makes no assumptions about your choice of persistence and it also aims to be run-able with no other dependencies.
 
-### Serilog
-
-The nuget is opinionated in terms of logging library. It nuget takes a dependency on [Serilog](http://serilog.net/) and wires it into the NServiceBus infrastructure.
-
-### Autofac
-
-The nuget is opinionated in terms of container. It nuget takes a dependency on [Autofac](http://autofac.org/) and wires it into the NServiceBus infrastructure.
+Note that the generated configuration code to use InMemory is wrapped in an `if (Environment.UserInteractive && Debugger.IsAttached)` this is to remind you to choose a durable persistence suitable for production use. If you really want to use InMemory then simply move it out of the `if` check. Feel free to modify the if statement to better meet your development requirements. 
 
 # Justification
 
 ## Drawbacks of the NServiceBus Host
 
-*The numbers and comparisons are taken from projects included in this repository*
-
 ### Performance
 
-In the larger scheme of things these numbers could be argued to be irrelevant, especially in the context of a real solution. However I am including them to show that a self hosted solution is in fact a little more performant. This is no surprise since a self host is a specific solution to a problem and hence can be more specialized.
+In the larger scheme of things these numbers could be argued to be irrelevant, especially in the context of a real solution. However I am including them to show that a self hosted solution is in fact a little more performant. This is no surprise since a self host is a specific solution to a problem and hence can be more specialized. This specialization results in 
 
-#### Startup time
-
-NServiceBus Host 5200 ms
-
-Self Host 2783 ms
-
-#### Memory Usage
-
-NServiceBus Host 37.9 MB
-
-Self Host 21.3 MB   
-
-### Deployment Size
-
-The Self Host does not need `NServiceBus.Host` (exe or pdb) however it does require a few more lines of setup code (see "How the code differs" below). The end result is that the self host approach is approximately 2.7MB smaller.
+ * reduced memory usage
+ * Faster statup time
+ * Smaller deployment size
 
 ### Debugging
 
@@ -69,28 +49,9 @@ The NServiceBus Host is a non-trivial piece of software, especially when you inc
 
 ### Controlling the entry point
 
-When using the NServiceBus Host the host is calling our code. As such the configuration code and behaviors (such as startup and shutdown) need to plug into very specific APIs. For example `IWantCustomLogging`, `IWantCustomInitialization`, `IWantToRunWhenBusStartsAndStops` and `IConfigureLogging`. If you invert the scenario, i.e. the developers code calls NServiceBus configuration, then these APIs are not required. 
+When using the NServiceBus Host the host is calling our code. As such the configuration code and behaviors (such as startup and shutdown) need to plug into very specific APIs. For example `IWantCustomLogging`, `IWantCustomInitialization`, `IWantToRunWhenBusStartsAndStops` and `IConfigureLogging`. If you invert the scenario, i.e. the developers code calls NServiceBus configuration, then the requirement for these APIs is greatly reduced. 
 
 # How the code differs
-
-## NServiceBus Host
-
-When using the NServiceBus Host your configuration might look like this
- 
-```
-public class EndpointConfig : IConfigureThisEndpoint, AsA_Server, IWantCustomInitialization
-{
-    public void Init()
-    {
-        Configure.Serialization.Json();
-        Configure.With()
-                 .DefaultBuilder();
-    }
-}
-```
-## Self Host
-
-You can achieve the same with a Self Host by using the below.
 
 As you can see it is more code. However the extra code is very simple and easy to manage. 
 
@@ -122,11 +83,7 @@ class ProgramService : ServiceBase
         busConfiguration.EndpointName("SelfHostSample");
         busConfiguration.UseSerialization<JsonSerializer>();
         busConfiguration.UsePersistence<InMemoryPersistence>();
-
-        if (Environment.UserInteractive && Debugger.IsAttached)
-        {
-            busConfiguration.EnableInstallers();
-        }
+        
         var startableBus = Bus.Create(busConfiguration);
         bus = startableBus.Start();
     }
@@ -246,22 +203,30 @@ Not required since your code is in full control of configuring NServiceBus. Ther
 
 ### endpointName
 
-Use `Configure.GetEndpointNameAction` before you call `Configure.With()` to change the endpoint name.
+Use `EndpointName` in your startup to change the endpoint name.
 
-    Configure.GetEndpointNameAction = () => "SalesEndpoint";
+    busConfiguration.EndpointName("SelfHostSample");
+
+Or if it must be defined by a command line parameter then extract that and pass it in. 
 
 ### scannedAssemblies
 
-By default NServiceBus will scan the current directory (`AppDomain.CurrentDomain.BaseDirectory`). If you want to run with specific assemblies you can use the `With` overload of `Configure.With(IEnumerable<Assembly> assemblies)`.
+By default NServiceBus will scan the current directory (`AppDomain.CurrentDomain.BaseDirectory`). If you want to run with specific assemblies you can use the `With` overload of `busConfiguration.AssembliesToScan(IEnumerable<Assembly> assemblies)`.
 
 ### installInfrastructure
 
-When self hosting NServiceBus you have to invoke the installers manually using
+When self hosting NServiceBus you have to invoke the installers with code using
 
-    Configure.Instance
-		.ForInstallationOn<NServiceBus.Installation.Environments.Windows>()
-		.Install()
+```
+if (Environment.UserInteractive && Debugger.IsAttached)
+{
+    busConfiguration.EnableInstallers();
+}
+```
 
+The bootstrap package will generate this for you.
+
+Note that this is wrapped in some logic to prevent your from running these in production. Production installation should be scripted and not performed at endpoint startup time. Feel free to modify the if statement to better meet your development requirements.
 
 ## Other stuff the NServiceBus Host provides
 
@@ -269,13 +234,13 @@ When self hosting NServiceBus you have to invoke the installers manually using
 
 NServiceBus has the concept of `Roles` and `Profiles`. For a good outline on these see [David Boike's](http://www.make-awesome.com/) post [All About NServiceBus Host Profiles and Roles](http://www.make-awesome.com/2013/02/all-about-nservicebus-host-profiles-and-roles/). I have found that the level of abstraction that comes from `Roles` and `Profiles` is too high. Initially they simplify the solution but when you start to get into more complex cases they are hard to combine, reuse and debug. IMHO it is better to understand what you want to configure and perform those actions explicitly. For example if you want the behavior or `AsA_Client` then include this in you configuration code.
 
-    Configure.Transactions.Disable();
-    Configure.Features.Disable<Features.SecondLevelRetries>();
-    return Configure.Instance
-                    .PurgeOnStartup(true)
-                    .DisableTimeoutManager()
-                    .UnicastBus()
-                    .RunHandlersUnderIncomingPrincipal(false);
+```
+busConfiguration.PurgeOnStartup(true);
+busConfiguration.Transactions().Disable();
+busConfiguration.DisableFeature<Features.SecondLevelRetries>();
+busConfiguration.DisableFeature<StorageDrivenPublishing>();
+busConfiguration.DisableFeature<TimeoutManager>();
+```
 
 ### Switching configuration by command line 
 

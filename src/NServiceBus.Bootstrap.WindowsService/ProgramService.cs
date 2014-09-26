@@ -29,10 +29,13 @@ class ProgramService : ServiceBase
         var busConfiguration = new BusConfiguration();
         busConfiguration.EndpointName("SelfHostSample");
         busConfiguration.UseSerialization<JsonSerializer>();
-        busConfiguration.UsePersistence<InMemoryPersistence>();
 
         if (Environment.UserInteractive && Debugger.IsAttached)
         {
+            //TODO: For production use, please select a durable persistence.
+            busConfiguration.UsePersistence<InMemoryPersistence>();
+
+            //TODO: For production use, please script your installation.
             busConfiguration.EnableInstallers();
         }
         var startableBus = Bus.Create(busConfiguration);

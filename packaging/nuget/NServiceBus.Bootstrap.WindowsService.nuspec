@@ -14,7 +14,7 @@
     <copyright>Copyright 2010-2014 NServiceBus. All rights reserved</copyright>
     <tags>NServiceBus, SelfHost</tags>
     <dependencies>
-      <dependency id="NServiceBus"  version="[5.0.0.0, 6.0.0.0)"/>
+      <dependency id="NServiceBus" version="[5.0.0.0, 6.0.0.0)"/>
 	  </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Configuration" />
