@@ -1,16 +1,47 @@
 ﻿param($installPath, $toolsPath, $package, $project)
 
-$program = $project.ProjectItems | where { $_.Name -eq "Program.cs" }
-
-if ($program){
-	$program.Delete()
+function Uninstall()
+{
+	Write-Host "Uninstalling " + $package.Id 
+	uninstall-package $package.Id -ProjectName $project.Name
 }
 
-$projectDir = (Get-Item $project.FullName).Directory
-$packagesFile = $projectDir.FullName + "\packages.config"
+function RemoveFromPackageNode
+{
+	Write-Host "Removing from package node " + $package.Id 
+	
+	$projectDir = (Get-Item $project.FullName).Directory
+	$packagesFile = $projectDir.FullName + "\packages.config"
+	[xml]$xml = Get-Content $packagesFile
+	$node = $xml.SelectSingleNode("/packages/package[@id='NServiceBus.Bootstrap.WindowsService']")
+	[Void]$node.ParentNode.RemoveChild($node)
+	$xml.Save($packagesFile)
+}
 
+function DeleteProgram
+{
+	Write-Host "Deleting Program.cs"
+	$program = $project.ProjectItems | where { $_.Name -eq "Program.cs" }
 
-[xml]$xml = Get-Content $packagesFile
-$node = $xml.SelectSingleNode("/packages/package[@id='NServiceBus.SelfHostStarter']")
-[Void]$node.ParentNode.RemoveChild($node)
-$xml.Save($packagesFile)
+	if ($program){
+		$program.Delete()
+	}
+}
+
+function IsExeProject
+{
+	$outputType = $project.Properties.Item("OutputType").Value
+	return $outputType -eq 1
+}
+
+if (IsExeProject)
+{
+	Write-Host "Project is an exe so continuing"
+	DeleteProgram
+	RemoveFromPackageNode
+}
+else
+{
+	Write-Error "Project is not an exe and hence bootstrap package cannot be applied"
+	Uninstall
+}
