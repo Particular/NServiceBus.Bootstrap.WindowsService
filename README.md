@@ -13,11 +13,11 @@ http://www.nuget.org/packages/NServiceBus.Bootstrap.WindowsService
 
 ### How to use
 
-Create a new Console Application and install the nuget package.
+Create a new Console Application and install the nuget package. A minimal NServiceBus configuration will be setup for you along with a `ProgramService` class that can be used as both a interactive console for development purposes and a windows service for production use. 
 
 ### Single use nuget
 
-This is a "single use nuget". So it after install, and adding code to your project, it will remove itself. Since it is single use there will never be any "upgrade", this is a "use and discard" approach.
+This is a "single use nuget". So it after install, and adding code to your project, it will remove itself. Since it is single use there will never be any "upgrade", this is a "use and then own the code" approach.
 
 ### For new self hosting applications
 
