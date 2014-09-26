@@ -3,8 +3,6 @@
 Self hosting NServiceBus
 ====================
 
-So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, un-installation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it.
-
 ## Nuget
 
 There is a starter packages on nuget.
@@ -32,6 +30,8 @@ This nuget configures everything to be in memory. The reason is that it makes no
 Note that the generated configuration code to use InMemory is wrapped in an `if (Environment.UserInteractive && Debugger.IsAttached)` this is to remind you to choose a durable persistence suitable for production use. If you really want to use InMemory then simply move it out of the `if` check. Feel free to modify the if statement to better meet your development requirements. 
 
 # Justification
+
+So NServiceBus comes with a very functional host exe that abstracts much of the hosting complexity. Its many features include installation, un-installation and configuring the windows service. It provides these features though a reasonable amount of custom code and the use of some powerful libraries like TopShelf. Since the NServiceBus Host is a general solution with dependencies there are some drawback associated with using it.
 
 ## Drawbacks of the NServiceBus Host
 
