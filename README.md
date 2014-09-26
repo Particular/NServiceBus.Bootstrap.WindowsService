@@ -1,7 +1,6 @@
 ![Icon](https://raw.github.com/SimonCropp/NServiceBus.SelfHost/master/Icons/package_icon.png)
 
-Self hosting NServiceBus
-====================
+# Self hosting NServiceBus in a combined Console app + Windows Service
 
 ## Nuget
 
