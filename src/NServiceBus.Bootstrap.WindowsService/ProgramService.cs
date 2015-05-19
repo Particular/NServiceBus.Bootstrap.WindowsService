@@ -38,8 +38,16 @@ class ProgramService : ServiceBase
             //TODO: For production use, please script your installation.
             busConfiguration.EnableInstallers();
         }
-        var startableBus = Bus.Create(busConfiguration);
-        bus = startableBus.Start();
+        try
+        {
+            var startableBus = Bus.Create(busConfiguration);
+            bus = startableBus.Start();
+        }
+        catch (Exception ex)
+        {
+            //TODO: Log the exception raised when starting the bug 
+            throw;
+        }
     }
 
     protected override void OnStop()
