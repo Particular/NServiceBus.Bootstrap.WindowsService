@@ -39,6 +39,7 @@ class ProgramService : ServiceBase
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
                 //TODO: For production use, please select a durable persistence.
+                //http://docs.particular.net/nservicebus/persistence/
                 busConfiguration.UsePersistence<InMemoryPersistence>();
 
                 //TODO: For production use, please script your installation.
@@ -55,6 +56,8 @@ class ProgramService : ServiceBase
 
     void OnCriticalError(string errorMessage, Exception exception)
     {
+        //TODO: Decide if shutting down the process is the best response to a critical error
+        //http://docs.particular.net/nservicebus/hosting/critical-errors
         var fatalMessage = string.Format("The following critical error was encountered:\n{0}\nProcess is shutting down.", errorMessage);
         logger.Fatal(fatalMessage, exception);
         Environment.FailFast(fatalMessage, exception);
