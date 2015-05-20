@@ -2,10 +2,13 @@
 using System.Diagnostics;
 using System.ServiceProcess;
 using NServiceBus;
+using NServiceBus.Logging;
 
 class ProgramService : ServiceBase
 {
     IBus bus;
+
+    static ILog logger = LogManager.GetLogger<ProgramService>();
 
     static void Main()
     {
@@ -26,20 +29,35 @@ class ProgramService : ServiceBase
 
     protected override void OnStart(string[] args)
     {
-        var busConfiguration = new BusConfiguration();
-        busConfiguration.EndpointName("SelfHostSample");
-        busConfiguration.UseSerialization<JsonSerializer>();
-
-        if (Environment.UserInteractive && Debugger.IsAttached)
+        try
         {
-            //TODO: For production use, please select a durable persistence.
-            busConfiguration.UsePersistence<InMemoryPersistence>();
+            var busConfiguration = new BusConfiguration();
+            busConfiguration.EndpointName("SelfHostSample");
+            busConfiguration.UseSerialization<JsonSerializer>();
+            busConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            //TODO: For production use, please script your installation.
-            busConfiguration.EnableInstallers();
+            if (Environment.UserInteractive && Debugger.IsAttached)
+            {
+                //TODO: For production use, please select a durable persistence.
+                busConfiguration.UsePersistence<InMemoryPersistence>();
+
+                //TODO: For production use, please script your installation.
+                busConfiguration.EnableInstallers();
+            }
+            var startableBus = Bus.Create(busConfiguration);
+            bus = startableBus.Start();
         }
-        var startableBus = Bus.Create(busConfiguration);
-        bus = startableBus.Start();
+        catch (Exception exception)
+        {
+            OnCriticalError("Failed to start the bus.", exception);
+        }
+    }
+
+    void OnCriticalError(string errorMessage, Exception exception)
+    {
+        var fatalMessage = string.Format("The following critical error was encountered:\n{0}\nProcess is shutting down.", errorMessage);
+        logger.Fatal(fatalMessage, exception);
+        Environment.FailFast(fatalMessage, exception);
     }
 
     protected override void OnStop()
