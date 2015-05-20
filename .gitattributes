@@ -53,7 +53,7 @@
 *.fs text
 *.fsx text
 *.hs text
-
+*.targets text
 *.psm1 text
 *.ps1 text
 *.txt text eol=crlf
