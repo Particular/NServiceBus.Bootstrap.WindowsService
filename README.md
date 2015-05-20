@@ -1,6 +1,6 @@
 ![Icon](https://raw.github.com/SimonCropp/NServiceBus.SelfHost/master/Icons/package_icon.png)
 
-# Self hosting NServiceBus in a combined Console app + Windows Service
+# Self hosting NServiceBus in a combined Console Application + Windows Service
 
 ## Nuget
 
@@ -12,7 +12,7 @@ http://www.nuget.org/packages/NServiceBus.Bootstrap.WindowsService
 
 ### How to use
 
-Create a new Console Application and install the nuget package. A minimal NServiceBus configuration will be setup for you along with a `ProgramService.cs` class that can be used as both a interactive console for development purposes and a windows service for production use. 
+Create a new Console Application (**.net 4.5 or higher**) and install the nuget package. A minimal NServiceBus configuration will be setup for you along with a `ProgramService.cs` class that can be used as both a interactive console for development purposes and a windows service for production use. 
 
 **Note that it will also delete the default `Program.cs` since it is superseded by `ProgramService.cs`**
 
@@ -266,7 +266,3 @@ Often the machine name is prefixed or suffixed with the environment type. eg mac
 #### By environmental variable 
 
 If you want the environment to have more granular control then you can use an environmental variable. For example `Environment.GetEnvironmentVariable("EnvironmentName")` or `Environment.GetEnvironmentVariable("SalesEndpointConfigName")`.  
-
-## Icon 
-
-<a href="http://thenounproject.com/term/lotus-flower/33319/" target="_blank">Lotus Flower</a> from The Noun Project
