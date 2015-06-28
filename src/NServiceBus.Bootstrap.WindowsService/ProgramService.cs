@@ -17,6 +17,10 @@ class ProgramService : ServiceBase
             // so we can run interactive from Visual Studio or as a windows service
             if (Environment.UserInteractive)
             {
+                Console.CancelKeyPress += (sender, e) =>
+                {
+                    service.OnStop();
+                };
                 service.OnStart(null);
                 Console.WriteLine("\r\nPress enter key to stop program\r\n");
                 Console.Read();
@@ -36,6 +40,7 @@ class ProgramService : ServiceBase
             busConfiguration.UseSerialization<JsonSerializer>();
             busConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
+            //TODO: this if is here to prevent you from accidentally deploy to production without considering important actions
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
                 //TODO: For production use, please select a durable persistence.
