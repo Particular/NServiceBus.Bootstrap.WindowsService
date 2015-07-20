@@ -107,8 +107,8 @@ So the NServiceBus Host handles installation and uninstallation. For example:
 
 When using a Self Host there is no such functionality. However Windows supports these features though the use of the [Service Control tool](http://technet.microsoft.com/en-us/library/cc754599.aspx). So the same commands using `sc.exe` would be: 
 
-    sc create SalesEndpoint binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
-    sc delete SalesEndpoint 
+    sc.exe create SalesEndpoint binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
+    sc.exe delete SalesEndpoint 
 
 Note that they are roughly equivalent in complexity and usage.
 
@@ -139,8 +139,8 @@ For completeness here are the equivalent approachers to use when Self Hosting:
 
 Service name can be configured when creating the service using the [sc create](http://technet.microsoft.com/en-us/library/cc990289.aspx) command.
 
-    sc create [ServiceName] binpath= [BinaryPathName]
-    sc create SalesEndpoint binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
+    sc.exe create [ServiceName] binpath= [BinaryPathName]
+    sc.exe create SalesEndpoint binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
 
 ### sideBySide
 
@@ -158,43 +158,43 @@ Since you are explicitly installing services you can do this yourself at install
 
 Display name can be configured when creating the service using the [sc create](http://technet.microsoft.com/en-us/library/cc990289.aspx) command.
 
-    sc create [ServiceName] displayname= [Description] binpath= [BinaryPathName]
-    sc create SalesEndpoint displayname= "Sales Endpoint" binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
+    sc.exe create [ServiceName] displayname= [Description] binpath= [BinaryPathName]
+    sc.exe create SalesEndpoint displayname= "Sales Endpoint" binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
 
 ### description
 
 Description can be changed after the service has been created using the [sc description](http://technet.microsoft.com/en-us/library/cc742069.aspx) command.
 
-    sc description [ServiceName] [Description]
-    sc description SalesEndpoint "Service for hosting the Sales Endpoint"
+    sc.exe description [ServiceName] [Description]
+    sc.exe description SalesEndpoint "Service for hosting the Sales Endpoint"
 
 ### dependsOn
 
 Service dependencies can be configured after the service has been created using the [sc config](http://technet.microsoft.com/en-us/library/cc990290.aspx) command.
 
-    sc config [ServiceName] depend= <Dependencies(separated by / (forward slash))>
-    sc config SalesEndpoint depend= MSMQ/MSDTC/RavenDB
+    sc.exe config [ServiceName] depend= <Dependencies(separated by / (forward slash))>
+    sc.exe config SalesEndpoint depend= MSMQ/MSDTC/RavenDB
 
 ### username and password
 
 Username and password can be configured when creating the service using the [sc create](http://technet.microsoft.com/en-us/library/cc990289.aspx) command.
 
-    sc create [ServiceName] obj= [AccountName] password= [Password] binpath= [BinaryPathName] 
-    sc create SalesEndpoint obj= MyDomain\SalesUser password= 9t6X7gkz binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
+    sc.exe create [ServiceName] obj= [AccountName] password= [Password] binpath= [BinaryPathName] 
+    sc.exe create SalesEndpoint obj= MyDomain\SalesUser password= 9t6X7gkz binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
 
 ### startManually
 
 You can configure the service to be a manual start when creating the service using the [sc create](http://technet.microsoft.com/en-us/library/cc990289.aspx) command.
 
-    sc create [ServiceName] start= {auto | demand | disabled} binpath= [BinaryPathName] 
-    sc create SalesEndpoint start= demand  binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
+    sc.exe create [ServiceName] start= {auto | demand | disabled} binpath= [BinaryPathName] 
+    sc.exe create SalesEndpoint start= demand  binpath= "c:\SalesEndpoint\SalesEndpoint.exe"
 
 ### uninstall
 
 A service can be uninstalled using the [sc delete](http://technet.microsoft.com/en-us/library/cc742045.aspx) command.
 
-    sc delete [ServiceName]
-    sc delete SalesEndpoint
+    sc.exe delete [ServiceName]
+    sc.exe delete SalesEndpoint
 
 ### endpointConfigurationType
 
