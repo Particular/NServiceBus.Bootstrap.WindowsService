@@ -44,22 +44,13 @@ class ProgramService : ServiceBase
             var endpointConfiguration = new EndpointConfiguration();
             endpointConfiguration.EndpointName("SelfHostSample");
             endpointConfiguration.UseSerialization<JsonSerializer>();
-            //TODO: optionally choose a different error queue. Perhaps on a remote machine
-            //http://docs.particular.net/nservicebus/errors/
             endpointConfiguration.SendFailedMessagesTo("error");
-            //TODO: optionally choose a different audit queue. Perhaps on a remote machine
-            //http://docs.particular.net/nservicebus/operations/auditing
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            //TODO: this if is here to prevent you from accidentally deploy to production without considering important actions
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
-                //TODO: For production use, please select a durable persistence.
-                //http://docs.particular.net/nservicebus/persistence/
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
-
-                //TODO: For production use, please script your installation.
                 endpointConfiguration.EnableInstallers();
             }
             endpoint = await Endpoint.Start(endpointConfiguration);
@@ -74,13 +65,11 @@ class ProgramService : ServiceBase
 
     void PerformStartupOperations()
     {
-        //TODO: perform any startup operations
+        endpoint.SendLocal(new MyMessage());
     }
 
     Task OnCriticalError(ICriticalErrorContext context)
     {
-        //TODO: Decide if shutting down the process is the best response to a critical error
-        //http://docs.particular.net/nservicebus/hosting/critical-errors
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
         logger.Fatal(fatalMessage, context.Exception);
         Environment.FailFast(fatalMessage, context.Exception);
