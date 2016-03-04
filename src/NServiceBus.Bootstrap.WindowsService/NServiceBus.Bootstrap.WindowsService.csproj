@@ -74,8 +74,6 @@
     <Delete Files="@(FilesToDelete)" />
     <MakeDir Directories="$(SolutionDir)..\results" />
     <Copy SourceFiles="$(ProjectDir)ProgramService.cs" DestinationFiles="$(SolutionDir)..\results\ProgramService.cs.pp" />
-    <Copy SourceFiles="$(ProjectDir)ConfigErrorQueue.cs" DestinationFolder="$(SolutionDir)..\results" />
-    <Copy SourceFiles="$(ProjectDir)ConfigAuditQueue.cs" DestinationFolder="$(SolutionDir)..\results" />
     <ItemGroup>
       <CsFiles Include="$(SolutionDir)..\results\*.cs.pp" />
     </ItemGroup>
