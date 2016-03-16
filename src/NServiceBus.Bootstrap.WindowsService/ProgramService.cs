@@ -41,8 +41,7 @@ class ProgramService : ServiceBase
     {
         try
         {
-            var endpointConfiguration = new EndpointConfiguration();
-            endpointConfiguration.EndpointName("SelfHostSample");
+            var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
             endpointConfiguration.UseSerialization<JsonSerializer>();
             //TODO: optionally choose a different error queue. Perhaps on a remote machine
             //http://docs.particular.net/nservicebus/errors/
