@@ -41,8 +41,7 @@ class ProgramService : ServiceBase
     {
         try
         {
-            var endpointConfiguration = new EndpointConfiguration();
-            endpointConfiguration.EndpointName("SelfHostSample");
+            var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
             endpointConfiguration.UseSerialization<JsonSerializer>();
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
