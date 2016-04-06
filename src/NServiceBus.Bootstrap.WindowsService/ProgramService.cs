@@ -15,7 +15,7 @@ class ProgramService : ServiceBase
     {
         using (var service = new ProgramService())
         {
-            // so we can run interactive from Visual Studio or as a windows service
+            // to run interactive from a console or as a windows service
             if (Environment.UserInteractive)
             {
                 Console.CancelKeyPress += (sender, e) =>
@@ -51,14 +51,14 @@ class ProgramService : ServiceBase
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            //TODO: this if is here to prevent you from accidentally deploy to production without considering important actions
+            //TODO: this if is here to prevent accidentally deploying to production without considering important actions
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
-                //TODO: For production use, please select a durable persistence.
+                //TODO: For production use select a durable persistence.
                 //http://docs.particular.net/nservicebus/persistence/
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
-                //TODO: For production use, please script your installation.
+                //TODO: For production use script the installation.
                 endpointConfiguration.EnableInstallers();
             }
             endpoint = await Endpoint.Start(endpointConfiguration);

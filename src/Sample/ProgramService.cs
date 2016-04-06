@@ -15,7 +15,7 @@ class ProgramService : ServiceBase
     {
         using (var service = new ProgramService())
         {
-            // so we can run interactive from Visual Studio or as a windows service
+            // to run interactive from a console or as a windows service
             if (Environment.UserInteractive)
             {
                 Console.CancelKeyPress += (sender, e) =>

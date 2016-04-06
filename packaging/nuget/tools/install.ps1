@@ -2,14 +2,14 @@
 
 function Uninstall()
 {
-	Write-Host "Uninstalling " + $package.Id 
+	Write-Host "Uninstalling " + $package.Id
 	uninstall-package $package.Id -ProjectName $project.Name
 }
 
 function RemoveFromPackageNode
 {
-	Write-Host "Removing from package node " + $package.Id 
-	
+	Write-Host "Removing from package node " + $package.Id
+
 	$projectDir = (Get-Item $project.FullName).Directory
 	$packagesFile = $projectDir.FullName + "\packages.config"
 	[xml]$xml = Get-Content $packagesFile
