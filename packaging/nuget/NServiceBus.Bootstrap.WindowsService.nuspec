@@ -23,9 +23,6 @@
   </metadata>
   <files>
     <file src="..\..\results\*.*" target="Content\net452" />
-    <file src="..\..\packaging\nuget\WRONG_TARGET_FRAMEWORK.txt" target="Content\net35" />
-    <file src="..\..\packaging\nuget\WRONG_TARGET_FRAMEWORK.txt" target="Content\net40" />
-    <file src="..\..\packaging\nuget\WRONG_TARGET_FRAMEWORK.txt" target="Content\net45" />
     <file src="..\..\packaging\nuget\tools\install.ps1" target="tools\net452" />
   </files>
 </package>
