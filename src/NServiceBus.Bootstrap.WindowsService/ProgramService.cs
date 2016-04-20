@@ -61,7 +61,8 @@ class ProgramService : ServiceBase
                 //TODO: For production use script the installation.
                 endpointConfiguration.EnableInstallers();
             }
-            endpoint = await Endpoint.Start(endpointConfiguration);
+            endpoint = await Endpoint.Start(endpointConfiguration)
+                .ConfigureAwait(false);
             PerformStartupOperations();
         }
         catch (Exception exception)
