@@ -1,2 +1,0 @@
-The nuget package NServiceBus.Bootstrap.WindowsService has been added to a project that targets incorrect version of .net.
-Pleease re-add the package to a Console Application that targets .net 4.5 or higher.

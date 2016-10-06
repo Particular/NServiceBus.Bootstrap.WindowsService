@@ -14,7 +14,7 @@
     <copyright>$copyright$</copyright>
     <tags>NServiceBus, SelfHost</tags>
     <dependencies>
-      <dependency id="NServiceBus" version="[5.2.3, 6.0.0)"/>
+      <dependency id="NServiceBus" version="[6.0.0, 7.0.0)" />
 	  </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Configuration" />
@@ -22,9 +22,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\..\results\*.*" target="Content\net45" />
-    <file src="..\..\packaging\nuget\WRONG_TARGET_FRAMEWORK.txt" target="Content\net35" />
-    <file src="..\..\packaging\nuget\WRONG_TARGET_FRAMEWORK.txt" target="Content\net40" />
-    <file src="..\..\packaging\nuget\tools\install.ps1" target="tools" />
+    <file src="..\..\results\*.*" target="Content\net452" />
+    <file src="..\..\packaging\nuget\tools\install.ps1" target="tools\net452" />
   </files>
 </package>
