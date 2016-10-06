@@ -52,8 +52,10 @@ class ProgramService : ServiceBase
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
                 endpointConfiguration.EnableInstallers();
             }
-            endpoint = await Endpoint.Start(endpointConfiguration);
-            PerformStartupOperations();
+            endpoint = await Endpoint.Start(endpointConfiguration)
+                .ConfigureAwait(false);
+            await PerformStartupOperations()
+                .ConfigureAwait(false);
         }
         catch (Exception exception)
         {
@@ -62,9 +64,10 @@ class ProgramService : ServiceBase
         }
     }
 
-    void PerformStartupOperations()
+    async Task PerformStartupOperations()
     {
-        endpoint.SendLocal(new MyMessage());
+        await endpoint.SendLocal(new MyMessage())
+                .ConfigureAwait(false);
     }
 
     Task OnCriticalError(ICriticalErrorContext context)
