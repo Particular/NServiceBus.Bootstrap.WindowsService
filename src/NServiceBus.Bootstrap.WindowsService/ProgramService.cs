@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
 
+[DesignerCategory("Code")]
 class ProgramService : ServiceBase
 {
     IEndpointInstance endpoint;

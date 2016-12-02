@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
 
+[DesignerCategory("Code")]
 class ProgramService : ServiceBase
 {
     IEndpointInstance endpoint;
@@ -64,10 +66,9 @@ class ProgramService : ServiceBase
         }
     }
 
-    async Task PerformStartupOperations()
+    Task PerformStartupOperations()
     {
-        await endpoint.SendLocal(new MyMessage())
-                .ConfigureAwait(false);
+        return endpoint.SendLocal(new MyMessage());
     }
 
     Task OnCriticalError(ICriticalErrorContext context)
