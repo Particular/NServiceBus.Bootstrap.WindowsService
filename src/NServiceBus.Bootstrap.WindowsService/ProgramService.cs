@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using NServiceBus;
 using NServiceBus.Logging;
 
+[DesignerCategory("Code")]
 class ProgramService : ServiceBase
 {
     IEndpointInstance endpoint;
@@ -44,10 +46,10 @@ class ProgramService : ServiceBase
             var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
             endpointConfiguration.UseSerialization<JsonSerializer>();
             //TODO: optionally choose a different error queue. Perhaps on a remote machine
-            //https://docs.particular.net/nservicebus/recoverability/
+            // https://docs.particular.net/nservicebus/recoverability/
             endpointConfiguration.SendFailedMessagesTo("error");
             //TODO: optionally choose a different audit queue. Perhaps on a remote machine
-            //https://docs.particular.net/nservicebus/operations/auditing
+            // https://docs.particular.net/nservicebus/operations/auditing
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
@@ -55,7 +57,7 @@ class ProgramService : ServiceBase
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
                 //TODO: For production use select a durable persistence.
-                //https://docs.particular.net/nservicebus/persistence/
+                // https://docs.particular.net/nservicebus/persistence/
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
                 //TODO: For production use script the installation.
@@ -80,7 +82,7 @@ class ProgramService : ServiceBase
     Task OnCriticalError(ICriticalErrorContext context)
     {
         //TODO: Decide if shutting down the process is the best response to a critical error
-        //https://docs.particular.net/nservicebus/hosting/critical-errors
+        // https://docs.particular.net/nservicebus/hosting/critical-errors
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
         logger.Fatal(fatalMessage, context.Exception);
         Environment.FailFast(fatalMessage, context.Exception);
