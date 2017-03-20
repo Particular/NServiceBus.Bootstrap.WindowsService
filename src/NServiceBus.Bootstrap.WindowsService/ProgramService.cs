@@ -69,9 +69,16 @@ class ProgramService : ServiceBase
         }
         catch (Exception exception)
         {
-            logger.Fatal("Failed to start", exception);
-            Environment.FailFast("Failed to start", exception);
+            Exit("Failed to start", exception);
         }
+    }
+
+    void Exit(string failedToStart, Exception exception)
+    {
+        logger.Fatal(failedToStart, exception);
+        //TODO: When using an external logging framework it is important to flush any pending entries prior to calling FailFast
+        // https://docs.particular.net/nservicebus/hosting/critical-errors#when-to-override-the-default-critical-error-action
+        Environment.FailFast(failedToStart, exception);
     }
 
     void PerformStartupOperations()
@@ -84,8 +91,7 @@ class ProgramService : ServiceBase
         //TODO: Decide if shutting down the process is the best response to a critical error
         // https://docs.particular.net/nservicebus/hosting/critical-errors
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
-        logger.Fatal(fatalMessage, context.Exception);
-        Environment.FailFast(fatalMessage, context.Exception);
+        Exit(fatalMessage, context.Exception);
         return Task.FromResult(0);
     }
 

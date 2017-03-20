@@ -61,9 +61,14 @@ class ProgramService : ServiceBase
         }
         catch (Exception exception)
         {
-            logger.Fatal("Failed to start", exception);
-            Environment.FailFast("Failed to start", exception);
+            Exit("Failed to start", exception);
         }
+    }
+
+    void Exit(string failedToStart, Exception exception)
+    {
+        logger.Fatal(failedToStart, exception);
+        Environment.FailFast(failedToStart, exception);
     }
 
     Task PerformStartupOperations()
@@ -74,8 +79,7 @@ class ProgramService : ServiceBase
     Task OnCriticalError(ICriticalErrorContext context)
     {
         var fatalMessage = $"The following critical error was encountered:\n{context.Error}\nProcess is shutting down.";
-        logger.Fatal(fatalMessage, context.Exception);
-        Environment.FailFast(fatalMessage, context.Exception);
+        Exit(fatalMessage, context.Exception);
         return Task.FromResult(0);
     }
 
