@@ -11,7 +11,12 @@ class ProgramService : ServiceBase
 {
     IEndpointInstance endpoint;
 
-    static ILog logger = LogManager.GetLogger<ProgramService>();
+    static ILog logger;
+
+    static ProgramService()
+    {
+        logger = LogManager.GetLogger<ProgramService>();
+    }
 
     static void Main()
     {
