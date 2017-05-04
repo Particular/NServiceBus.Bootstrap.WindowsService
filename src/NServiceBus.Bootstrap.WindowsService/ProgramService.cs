@@ -11,7 +11,15 @@ class ProgramService : ServiceBase
 {
     IEndpointInstance endpoint;
 
-    static ILog logger = LogManager.GetLogger<ProgramService>();
+    static ILog logger;
+
+    static ProgramService()
+    {
+        //TODO: optionally choose a custom logging library
+        //https://docs.particular.net/nservicebus/logging/#custom-logging
+        // LogManager.Use<TheLoggingFactory>();
+        logger = LogManager.GetLogger<ProgramService>();
+    }
 
     static void Main()
     {
