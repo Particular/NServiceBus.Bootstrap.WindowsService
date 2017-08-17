@@ -52,28 +52,31 @@ class ProgramService : ServiceBase
         try
         {
             var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
-            //TODO: choose production transport
-            endpointConfiguration.UseTransport<LearningTransport>();
-            //TODO: For production use select a durable persistence.
-            // https://docs.particular.net/persistence/
-            endpointConfiguration.UsePersistence<LearningPersistence>();
+
             //TODO: optionally choose a different serializer
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             // https://docs.particular.net/nservicebus/serialization/
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+
             //TODO: optionally choose a different error queue. Perhaps on a remote machine
             // https://docs.particular.net/nservicebus/recoverability/
             endpointConfiguration.SendFailedMessagesTo("error");
+
             //TODO: optionally choose a different audit queue. Perhaps on a remote machine
             // https://docs.particular.net/nservicebus/operations/auditing
             endpointConfiguration.AuditProcessedMessagesTo("audit");
+
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-            //TODO: this if is here to prevent accidentally deploying to production without considering important actions
+            //TODO: this is to prevent accidentally deploying to production without considering important actions
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
+                //TODO: choose production transport
+                // https://docs.particular.net/transports/
+                endpointConfiguration.UseTransport<LearningTransport>();
+
                 //TODO: For production use select a durable persistence.
                 // https://docs.particular.net/persistence/
-                endpointConfiguration.UsePersistence<InMemoryPersistence>();
+                endpointConfiguration.UsePersistence<LearningPersistence>();
 
                 //TODO: For production use script the installation.
                 endpointConfiguration.EnableInstallers();

@@ -50,14 +50,14 @@ class ProgramService : ServiceBase
         {
             var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
             endpointConfiguration.UseTransport<LearningTransport>();
-            endpointConfiguration.UsePersistence<LearningPersistence>();
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
+                endpointConfiguration.UsePersistence<LearningPersistence>();
+                endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
                 endpointConfiguration.EnableInstallers();
             }
             endpoint = await Endpoint.Start(endpointConfiguration)
