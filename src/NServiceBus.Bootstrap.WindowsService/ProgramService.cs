@@ -52,7 +52,14 @@ class ProgramService : ServiceBase
         try
         {
             var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
-            endpointConfiguration.UseSerialization<JsonSerializer>();
+            //TODO: choose production transport
+            endpointConfiguration.UseTransport<LearningTransport>();
+            //TODO: For production use select a durable persistence.
+            // https://docs.particular.net/persistence/
+            endpointConfiguration.UsePersistence<LearningPersistence>();
+            //TODO: optionally choose a different serializer
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+            // https://docs.particular.net/nservicebus/serialization/
             //TODO: optionally choose a different error queue. Perhaps on a remote machine
             // https://docs.particular.net/nservicebus/recoverability/
             endpointConfiguration.SendFailedMessagesTo("error");
@@ -65,7 +72,7 @@ class ProgramService : ServiceBase
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
                 //TODO: For production use select a durable persistence.
-                // https://docs.particular.net/nservicebus/persistence/
+                // https://docs.particular.net/persistence/
                 endpointConfiguration.UsePersistence<InMemoryPersistence>();
 
                 //TODO: For production use script the installation.
@@ -106,5 +113,6 @@ class ProgramService : ServiceBase
     protected override void OnStop()
     {
         endpoint?.Stop().GetAwaiter().GetResult();
+        //TODO: perform any shutdown operations
     }
 }

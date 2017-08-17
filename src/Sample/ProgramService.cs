@@ -49,14 +49,15 @@ class ProgramService : ServiceBase
         try
         {
             var endpointConfiguration = new EndpointConfiguration("SelfHostSample");
-            endpointConfiguration.UseSerialization<JsonSerializer>();
+            endpointConfiguration.UseTransport<LearningTransport>();
+            endpointConfiguration.UsePersistence<LearningPersistence>();
+            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
             endpointConfiguration.SendFailedMessagesTo("error");
             endpointConfiguration.AuditProcessedMessagesTo("audit");
             endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
             if (Environment.UserInteractive && Debugger.IsAttached)
             {
-                endpointConfiguration.UsePersistence<InMemoryPersistence>();
                 endpointConfiguration.EnableInstallers();
             }
             endpoint = await Endpoint.Start(endpointConfiguration)
